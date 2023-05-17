@@ -7,8 +7,7 @@ export const createViteServer = async ({ force } = { force: false }) => {
   if (!viteServer || force) {
     viteServer = await createServer({
       publicDir: resolveClientPath('public'),
-      server: { middlewareMode: true },
-      appType: 'custom',
+      server: { middlewareMode: 'ssr' },
     });
   }
   return viteServer;
