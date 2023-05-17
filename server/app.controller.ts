@@ -6,21 +6,14 @@ import {
   Req,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync } from 'fs';
 import type { ViteDevServer } from 'vite';
 import { isProduction, resolveClientPath, resolveDistPath } from './utils';
 import { createViteServer } from './vite-server';
 
 const TEMPLATE_PLACEHOLDER = '<!-- template-placeholder -->';
-const ROUTES_PATH = readdirSync(resolveClientPath('pages'), {
-  encoding: 'utf-8',
-})
-  .filter((path) => /\.vue$/.test(path))
-  .map((path) => {
-    const name = path.match(/(.*)\.vue$/)[1].toLowerCase() || '';
-    const routePath = name === 'home' ? '/' : `/${name}`;
-    return routePath;
-  });
+const ROUTES_PATH = ['/', '/about'];
+
 
 @Controller(ROUTES_PATH)
 export class AppController {
