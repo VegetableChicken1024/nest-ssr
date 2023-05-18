@@ -10,10 +10,11 @@ import { readFileSync } from 'fs';
 import type { ViteDevServer } from 'vite';
 import { isProduction, resolveClientPath, resolveDistPath } from './utils';
 import { createViteServer } from './vite-server';
+import { routeMap } from './routeMap';
 
 const TEMPLATE_PLACEHOLDER = '<!-- template-placeholder -->';
 const INITIAL_STATE_PLACEHOLDER = "'<!-- initial-state-placeholder -->'";
-const ROUTES_PATH = ['/', '/about'];
+const ROUTES_PATH = routeMap;
 
 @Controller(ROUTES_PATH)
 export class AppController {
