@@ -4,6 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { FastifyRequest } from 'fastify';
 import { Observable, map } from 'rxjs';
 import { routeMap } from '../../routeMap';
 
@@ -20,8 +21,8 @@ export class TransformInterceptor<T>
   ): Observable<Response<T>> {
     // 忽略部分接口
     const ignorePaths = routeMap;
-    const request = context.switchToHttp().getRequest();
-    const url = request.originalUrl;
+    const request = context.switchToHttp().getRequest<FastifyRequest>();
+    const url = request.url;
     if (ignorePaths.includes(url)) return next.handle();
     return next.handle().pipe(
       map((data) => ({
