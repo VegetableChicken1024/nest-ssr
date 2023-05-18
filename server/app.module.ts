@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { getConfig } from './utils';
+import { ArticleModule } from './article/article.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { getConfig } from './utils';
       isGlobal: true,
       load: [getConfig],
     }),
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [],
