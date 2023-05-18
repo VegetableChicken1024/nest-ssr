@@ -12,8 +12,8 @@ import { isProduction, resolveClientPath, resolveDistPath } from './utils';
 import { createViteServer } from './vite-server';
 
 const TEMPLATE_PLACEHOLDER = '<!-- template-placeholder -->';
+const INITIAL_STATE_PLACEHOLDER = "'<!-- initial-state-placeholder -->'";
 const ROUTES_PATH = ['/', '/about'];
-
 
 @Controller(ROUTES_PATH)
 export class AppController {
@@ -23,7 +23,9 @@ export class AppController {
     const url = request.originalUrl;
     let vite: ViteDevServer;
     let html: string;
-    let render: (url: string) => Promise<{ template: string }>;
+    let render: (
+      url: string,
+    ) => Promise<{ template: string; initialState: object }>;
     try {
       if (isProduction) {
         html = readFileSync(resolveDistPath('client', 'index.html'), {
@@ -41,8 +43,10 @@ export class AppController {
           await vite.ssrLoadModule(resolveClientPath('entry-server.ts'))
         ).render;
       }
-      const { template } = await render(url);
-      return html.replace(TEMPLATE_PLACEHOLDER, template);
+      const { template, initialState } = await render(url);
+      return html
+        .replace(TEMPLATE_PLACEHOLDER, template)
+        .replace(INITIAL_STATE_PLACEHOLDER, JSON.stringify(initialState));
     } catch (error) {
       vite && vite.ssrFixStacktrace(error);
       throw new InternalServerErrorException(error);
