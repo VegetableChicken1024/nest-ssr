@@ -11,6 +11,16 @@ export class AppController {
   @Header('Content-Type', 'text/html')
   async renderApp(@Req() request: FastifyRequest): Promise<string> {
     const url = request.url;
-    return renderTemplate(url);
+    const cookie = request.cookies;
+    const persistState: Record<string, any> = {};
+    Object.keys(cookie).forEach((key) => {
+      if (key.includes('persistState')) {
+        const storeId = key.split('-')[1];
+        persistState[storeId] = JSON.parse(cookie[key]);
+      }
+    });
+    global.__INITIAL_STATE__ = persistState;
+    const template = await renderTemplate(url);
+    return template;
   }
 }

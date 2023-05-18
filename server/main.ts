@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie';
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -5,6 +6,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import * as compression from 'compression';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { AllExceptionFilter } from './common/exceptions/base.exception.filter';
 import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
@@ -16,6 +18,10 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
+  app.use(cookieParser());
+  app.register(fastifyCookie);
+
   app.enableVersioning({
     type: VersioningType.URI,
   });
