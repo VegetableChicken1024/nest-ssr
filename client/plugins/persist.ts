@@ -11,11 +11,7 @@ export const persistPlugin = (context: PiniaPluginContext) => {
     const persistValue = import.meta.env.SSR
       ? global.__INITIAL_STATE__[store.$id]?.[item] ?? ''
       : JSON.parse(Cookies.get(`persistState-${store.$id}`) ?? '{}')[item];
-    persistValue &&
-      (store[item] =
-        typeof persistValue === 'string'
-          ? JSON.parse(persistValue)
-          : persistValue);
+    persistValue && (store[item] = persistValue);
   });
   // @ts-ignore
   import.meta.env.SSR ||
